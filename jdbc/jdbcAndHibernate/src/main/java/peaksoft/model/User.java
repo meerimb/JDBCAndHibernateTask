@@ -1,16 +1,18 @@
 package peaksoft.model;
 
 import javax.persistence.*;
+@Entity
 
-@Table
+@Table(name="users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name ="name")
     private String name;
 
-    @Column
+    @Column(name="lastname")
     private String lastName;
 
     @Column

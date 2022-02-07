@@ -19,7 +19,8 @@ public abstract class UserDaoJdbcImpl implements UserDao {
                 "id SERIAL," +
                 "name VARCHAR(50)NOT NULL," +
                 "lastName VARCHAR(50)NOT NULL," +
-                "age INTEGER NOT NULL);";
+                "age INTEGER NOT NULL," +
+                "PRIMARY KEY (id))";
         try (Connection connection = connection()) {
             PreparedStatement statement = connection.prepareStatement(SQL);
             statement.executeUpdate();
@@ -30,15 +31,15 @@ public abstract class UserDaoJdbcImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        String SQL = "DROP TABLE IF EXISTS users(" +
-                "id serial," +
-                "name VARCHAR(50)NOT NULL," +
-                "lastName VARCHAR(50)NOT NULL," +
-                "age INTEGER NOT NULL,"+
-                "Primary Key(id));";
+        String SQL = "DROP TABLE IF EXISTS users";
+//                "id serial," +
+//                "name VARCHAR(50)NOT NULL," +
+//                "lastName VARCHAR(50)NOT NULL," +
+//                "age INTEGER NOT NULL,"+
+//                "Primary Key(id));";
         try (Connection connection = connection()) {
             PreparedStatement statement = connection.prepareStatement(SQL);
-            statement.executeUpdate(SQL);
+            statement.executeUpdate();
             System.out.println("Table was droped");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,16 +47,16 @@ public abstract class UserDaoJdbcImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String Save_SQL="INSERT INTO users(name,lastName,age)values (?,?,?);";
-        try (Connection connection = connection()) {
-            PreparedStatement psmt = connection.prepareStatement("Save_SQL");
-            psmt.setString(1, user.getName());
-            psmt.setString(2, user.getLastName());
-            psmt.setByte(3, user.getAge());
-            psmt.executeUpdate();
-            System.out.println(user.getName() + " " + "was saved");
+        String SAVE_SQL = "INSERT INTO users(name, lastname, age) VALUES (?, ?, ?)";
+        try (Connection connection = connection();
+             PreparedStatement statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, name);
+            statement.setString(2, lastName);
+            statement.setByte(3, age);
+            statement.executeUpdate();
+            System.out.println(name + " " + "add to dataBase");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -72,20 +73,20 @@ public abstract class UserDaoJdbcImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        String sql = "SELECT * FROM users";
+        String SQL = "SELECT * FROM users";
         List<User> userList = new ArrayList<>();
         try (Connection connect = connection();
              Statement statement = connect.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+             ResultSet resultSet = statement.executeQuery(SQL)) {
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getLong("id"));
                 user.setName(resultSet.getString("name"));
-                user.setLastName(resultSet.getString("lastName"));
+                user.setLastName(resultSet.getString("lastname"));
                 user.setAge(resultSet.getByte("age"));
                 userList.add(user);
                 System.out.println(userList);
-                System.out.println(resultSet.getString("name"));
+
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
