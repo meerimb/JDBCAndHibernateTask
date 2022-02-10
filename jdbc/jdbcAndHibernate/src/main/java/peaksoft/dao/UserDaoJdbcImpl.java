@@ -47,6 +47,7 @@ public abstract class UserDaoJdbcImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
+
         String SAVE_SQL = "INSERT INTO users(name, lastname, age) VALUES (?, ?, ?)";
         try (Connection connection = connection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -62,7 +63,7 @@ public abstract class UserDaoJdbcImpl implements UserDao {
 
     public void removeUserById(long id) {
         String remove_SQL="DELETE FROM users WHERE id=?";
-        try (Connection connection = connection()) {
+        try (Connection ignored = connection()) {
             PreparedStatement psmt = connection().prepareStatement(remove_SQL);
             psmt.setLong(1, id);
             psmt.executeUpdate();
@@ -86,13 +87,15 @@ public abstract class UserDaoJdbcImpl implements UserDao {
                 user.setAge(resultSet.getByte("age"));
                 userList.add(user);
                 System.out.println(userList);
-
             }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         return userList;
     }
+
     public void cleanUsersTable() {
         String SQL = "truncate users";
         try (Connection connection = connection();
