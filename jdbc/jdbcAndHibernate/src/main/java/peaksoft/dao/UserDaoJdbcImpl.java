@@ -32,11 +32,6 @@ public abstract class UserDaoJdbcImpl implements UserDao {
 
     public void dropUsersTable() {
         String SQL = "DROP TABLE IF EXISTS users";
-//                "id serial," +
-//                "name VARCHAR(50)NOT NULL," +
-//                "lastName VARCHAR(50)NOT NULL," +
-//                "age INTEGER NOT NULL,"+
-//                "Primary Key(id));";
         try (Connection connection = connection()) {
             PreparedStatement statement = connection.prepareStatement(SQL);
             statement.executeUpdate();

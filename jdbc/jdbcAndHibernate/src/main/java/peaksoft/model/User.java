@@ -1,8 +1,8 @@
 package peaksoft.model;
 
 import javax.persistence.*;
-@Entity
 
+@Entity
 @Table(name="users")
 public class User {
     @Id
@@ -61,11 +61,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "User: " +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                '}';
+                ", age=" + age;
     }
 }
